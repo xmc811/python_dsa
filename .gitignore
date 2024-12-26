@@ -1,2 +1,4 @@
 sandbox
 .venv
+dist
+*.egg-info
