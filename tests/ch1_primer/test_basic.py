@@ -1,42 +1,51 @@
 import pytest
-from src.python_dsa.ch1_primer.basic import is_multiple, is_even, minmax, sum_squares, sum_odd_squares, random_choice
+
+from python_dsa.ch1_primer.basic import (
+    is_even,
+    is_multiple,
+    minmax,
+    random_choice,
+    sum_odd_squares,
+    sum_squares,
+)
+
 
 def test_is_multiple():
     # Test positive multiples
-    assert is_multiple(10, 2) is True
-    assert is_multiple(15, 5) is True
+    assert is_multiple(10, 2)
+    assert is_multiple(15, 5)
 
     # Test non-multiples
-    assert is_multiple(10, 3) is False
-    assert is_multiple(15, 4) is False
+    assert not is_multiple(10, 3)
+    assert not is_multiple(15, 4)
 
     # Test edge cases
-    assert is_multiple(0, 1) is True  # Zero is a multiple of any number (except zero itself)
-    assert is_multiple(0, 10) is True
+    assert is_multiple(0, 1)  # Zero is a multiple of any number (except zero itself)
+    assert is_multiple(0, 10)
     with pytest.raises(ZeroDivisionError):  # m = 0 should raise an exception
         is_multiple(10, 0)
 
     # Test negative multiples
-    assert is_multiple(-10, 2) is True
-    assert is_multiple(-15, -5) is True
-    assert is_multiple(15, -5) is True
-    assert is_multiple(-10, 3) is False
+    assert is_multiple(-10, 2)
+    assert is_multiple(-15, -5)
+    assert is_multiple(15, -5)
+    assert not is_multiple(-10, 3)
 
 
 def test_is_even():
     # Test even numbers
-    assert is_even(2) is True
-    assert is_even(0) is True
-    assert is_even(-4) is True
+    assert is_even(2)
+    assert is_even(0)
+    assert is_even(-4)
 
     # Test odd numbers
-    assert is_even(1) is False
-    assert is_even(-3) is False
-    assert is_even(9) is False
+    assert not is_even(1)
+    assert not is_even(-3)
+    assert not is_even(9)
 
     # Test edge cases
-    assert is_even(1234567890) is True  # Large even number
-    assert is_even(-123456789) is False  # Large odd negative number
+    assert is_even(1234567890)  # Large even number
+    assert not is_even(-123456789)  # Large odd negative number
 
 
 def test_minmax():
@@ -66,12 +75,13 @@ def test_sum_squares():
     assert sum_squares(10) == 285  # 1^2 + 2^2 + ... + 9^2 = 285
     # Test case 5: Edge case for sum of squares of numbers less than 0
     with pytest.raises(ValueError):
-        sum_squares(-5)  # The function doesn't explicitly handle negative input; a negative input might raise an error
+        sum_squares(-5)
+    # The function doesn't explicitly handle negative input; a negative input might raise an error
 
 
 def test_sum_odd_squares():
     # Test case 1: Sum of squares of odd numbers less than 10
-    assert sum_odd_squares(10) == 165  # 1^2 + 3^2 + 5^2 + 7^2 + 9^2 = 1 + 9 + 25 + 49 + 81 = 165
+    assert sum_odd_squares(10) == 165
     # Test case 2: Edge case when n is 1 (no odd numbers smaller than 1)
     assert sum_odd_squares(1) == 0  # No odd numbers smaller than 1
     # Test case 3: Sum of squares of odd numbers less than 0
@@ -89,7 +99,7 @@ def test_random_choice():
     result = random_choice(lst)
     assert result in lst  # Ensure the result is an element in the list
     # Test case 2: Typical case with a string list
-    lst = ['a', 'b', 'c']
+    lst = ["a", "b", "c"]
     result = random_choice(lst)
     assert result in lst  # Ensure the result is an element in the list
     # Test case 3: Test with a larger list
@@ -106,4 +116,4 @@ def test_random_choice():
     lst = [1, 2, 3, 4, 5]
     results = [random_choice(lst) for _ in range(1000)]
     # Ensure that all elements are selected at least once (in practice, not always true, but it should happen with high probability)
-    assert all(x in lst for x in results)
+    assert all(x in results for x in lst)

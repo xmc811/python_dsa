@@ -1,5 +1,6 @@
 import random
 
+
 def is_multiple(n: int, m: int) -> bool:
     """
     Write a short Python function, is multiple(n, m), that takes two integer
@@ -15,7 +16,7 @@ def is_even(k: int) -> bool:
     returns True if k is even, and False otherwise. However, your function
     cannot use the multiplication, modulo, or division operators.
     """
-    even_list = ['0', '2', '4', '6', '8']
+    even_list = ["0", "2", "4", "6", "8"]
     return str(k)[-1] in even_list
 
 

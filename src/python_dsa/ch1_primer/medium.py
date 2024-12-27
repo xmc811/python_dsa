@@ -1,6 +1,8 @@
 import random
 import string
-from basic import is_even
+
+from .basic import is_even
+
 
 def has_odd_product(lst):
     """
@@ -8,6 +10,10 @@ def has_odd_product(lst):
     determines if there is a distinct pair of numbers in the sequence whose
     product is odd.
     """
+    if not lst:
+        return False
+
+    lst = set(lst)
     ct = 0
     for x in lst:
         if not is_even(x):
@@ -34,13 +40,13 @@ def random_shuffle(data):
     from a to b (including both endpoints). Using only the randint function,
     implement your own version of the shuffle function.
     """
-    shuffled = []
     n = len(data)
     for i in range(n):
-        idx = random.randint(0, n - i - 1)
-        shuffled.append(data[idx])
-        data = data[:idx] + data[(idx+1):]
-    return shuffled
+        # Random index from i to n-1
+        idx = random.randint(i, n - 1)
+        # Swap elements at i and idx
+        data[i], data[idx] = data[idx], data[i]
+    return data
 
 
 def dot_product(a, b):
@@ -49,7 +55,9 @@ def dot_product(a, b):
     storing int values, and returns the dot product of a and b. That is, it returns
     an array c of length n such that c[i] = a[i] · b[i], for i = 0, . . . ,n−1.
     """
-    return sum([x1*x2 for x1, x2 in zip(a, b)])
+    if len(a) != len(b):
+        raise ValueError("Input arrays must have the same length.")
+    return sum([x1 * x2 for x1, x2 in zip(a, b)])
 
 
 def count_vowels(s):
@@ -57,8 +65,8 @@ def count_vowels(s):
     Write a short Python function that counts the number of vowels in a given
     character string.
     """
-    vowels = ['a', 'e', 'i', 'o', 'u']
-    return sum([c in vowels for c in s])
+    vowels = {"a", "e", "i", "o", "u"}
+    return sum([c.lower() in vowels for c in s])
 
 
 def remove_punctuation(s):
@@ -68,11 +76,7 @@ def remove_punctuation(s):
     if given the string "Let s try, Mike.", this function would return
     "Lets try Mike".
     """
-    res = []
-    for c in s:
-        if c not in string.punctuation:
-            res.append(c)
-    return ''.join(res)
+    return "".join(c for c in s if c not in string.punctuation)
 
 
 def arithmatic_order(a, b, c):
@@ -81,9 +85,9 @@ def arithmatic_order(a, b, c):
     the console and determines if they can be used in a correct arithmetic
     formula (in the given order), like “a+b = c,” “a = b−c,” or “a ∗ b = c.”
     """
-    if (a + b == c) or (a - b == c) or (a * b == c) or (a / b == c):
+    if (a + b == c) or (a - b == c) or (a * b == c) or ((a / b == c) and (b != 0)):
         return True
-    elif (a == b + c) or (a == b - c) or (a == b * c) or (a == b / c):
+    elif (a == b + c) or (a == b - c) or (a == b * c) or ((a == b / c) and (c != 0)):
         return True
     else:
         return False
@@ -118,4 +122,8 @@ def norm(v, p=2):
     value of v and norm(v) returns the Euclidean norm of v. You may assume
     that v is a list of numbers.
     """
-    return sum([x**p for x in v]) ** (1/p)
+    if p == 0:
+        raise ValueError("p = 0 is not a valid norm")
+    if p == float("inf"):
+        return max(abs(x) for x in v)
+    return sum([x**p for x in v]) ** (1 / p)
