@@ -39,6 +39,7 @@ def test_parse_term_str_valid(expr, expected_coef, expected_vars):
         (1, {"x": 1, "y": 3, "z": 1}, "(x)(y^3)(z)"),
         (-1, {"x": 2, "y": 1, "z": 3}, "-(x^2)(y)(z^3)"),
         (5, {}, "5"),
+        (0, {}, "0"),
         (-7.5, {}, "-7.5"),
         (1, {"x": 1}, "(x)"),
         (-1, {"x": 1}, "-(x)"),
@@ -52,10 +53,13 @@ def test_term_equality():
     term1 = Term((3, {"x": 2}))
     term2 = Term("3(x^2)")
     term3 = Term((3, {"y": 2}))
+    term4 = Term((0, {"y": 2}))
+    term5 = Term("0")
 
     # Positive equality case
     assert term1 == term2
     assert term1 != term3
+    assert term4 == term5
 
 
 def test_term_addition():
@@ -74,7 +78,7 @@ def test_term_addition():
     result = term1 + term3
     assert result == Term("0")
 
-    with pytest.raises(ValueError, match="Cannot be merged."):
+    with pytest.raises(ValueError, match="Cannot be combined."):
         term1 + term4
 
     result = term5 + term6
@@ -101,12 +105,19 @@ def test_term_negation():
 def test_term_subtraction():
     term1 = Term("3(x^2)")
     term2 = Term((-1, {"x": 2}))
+    term3 = Term("0")
+    term4 = Term((4, {"x": 3}))
 
     result = term1 - term2
     assert result == Term((4, {"x": 2}))
 
     result = term1 - term1
     assert result == Term("0")
+
+    assert term2 - term3 == term2
+
+    with pytest.raises(ValueError, match="Cannot be combined."):
+        term1 - term4
 
 
 @pytest.mark.parametrize(

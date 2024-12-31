@@ -2,6 +2,15 @@ import re
 
 
 def parse_expression(expr):
+    """
+    Parses an algebraic expression into a coefficient and variables with exponents.
+
+    Args:
+        expr (str): The algebraic expression (e.g., "-3(x^2)(y)").
+
+    Returns:
+        tuple: A coefficient (float) and a dictionary of variables with exponents.
+    """
     # Regex to match the coefficient and the variables with exponents
     pattern = r"^(-?[\d.]+)?|\((\w+)(?:\^(\d+))?\)"
     matches = re.findall(pattern, expr)
@@ -57,6 +66,10 @@ def build_expression(coefficient, variables):
 
 
 class Term:
+    """
+    Represents a single term in a polynomial, consisting of a coefficient and variables with exponents.
+    """
+
     def __init__(self, expr):
         if isinstance(expr, str):
             self.coefficient, self.variables = parse_expression(expr)
@@ -101,7 +114,7 @@ class Term:
         if self.is_similar_to(other):
             return Term((self.coefficient + other.coefficient, self.variables))
         else:
-            raise ValueError("Cannot be merged.")
+            raise ValueError("Cannot be combined.")
 
     def __radd__(self, other):
         return self + other
@@ -134,6 +147,10 @@ class Term:
 
 
 class Polynomial:
+    """
+    Represents a polynomial as a collection of terms.
+    """
+
     def __init__(self, lst):
         self.terms = lst
         self.remove_zero_terms()
@@ -177,18 +194,42 @@ class Polynomial:
 
 
 if __name__ == "__main__":
-    t1 = Term("3(x^2)(y^0)") + Term("2(x^2)(z^0)")
-    t2 = t1 * Term("7(y)")
-    print(t1)
-    print(t2)
-    print(t2.derivative("x"))
-    print(t2.derivative("y"))
-    print(t2.derivative("y").derivative("y"))
+    # Term examples
+    t1 = Term("3(x^2)(y)")
+    t2 = Term("-4(x^2)(y)")
+    t3 = Term("(z)")
+    t4 = Term("5")
 
-    p1 = Polynomial([Term("(z)"), Term("-(y)"), Term("2(x)")])
-    p2 = Polynomial([Term("(y)"), Term("(z)")])
+    # Addition of similar terms
+    print("t1 + t2:", t1 + t2)
+
+    # Multiplication of terms
+    print("t1 * t3:", t1 * t3)
+
+    # Taking derivatives
+    print("Derivative of t1 with respect to 'x':", t1.derivative("x"))
+    print("Derivative of t1 with respect to 'y':", t1.derivative("y"))
+    print("Derivative of t3 with respect to 'z':", t3.derivative("z"))
+    print("Derivative of t4 with respect to 'x':", t4.derivative("x"))
+
+    # Polynomial examples
+    p1 = Polynomial([Term("3(x)"), Term("4(y)")])
+    p2 = Polynomial([Term("-3(x)"), Term("5(z)")])
+
+    # Polynomial addition
+    print("p1 + p2:", p1 + p2)
+
+    # Polynomial subtraction
+    print("p1 - p2:", p1 - p2)
+
+    # Polynomial multiplication
     p3 = Polynomial([Term("(x)"), Term("(y)")])
-    p4 = Polynomial([Term("(x)"), Term("-(y)")])
-    print(p1 - p2)
-    print((p3 * p3) * (p4 * p4))
-    print((p1 * p2) + (p3 * p4))
+    print("p1 * p3:", p1 * p3)
+
+    # Higher-order derivatives
+    t5 = Term("6(x^3)(y^2)")
+    print(
+        "Second derivative of t5 with respect to 'x':",
+        t5.derivative("x").derivative("x"),
+    )
+    print("Mixed derivative of t5 (d^2/dxdy):", t5.derivative("x").derivative("y"))
